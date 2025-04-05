@@ -1,24 +1,30 @@
 {
   "name": "spendly-backend",
   "scripts": {
+    "all": "bun run format && bun run lint:fix",
     "dev": "bun run --hot src/index.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.4.3",
     "@typescript-eslint/eslint-plugin": "^8.29.0",
     "@typescript-eslint/parser": "^8.29.0",
+    "ajv": "^8.17.1",
+    "bcrypt": "^5.1.1",
     "eslint": "^9.24.0",
     "hono": "^4.7.5",
     "pg": "^8.14.1",
     "pg-hstore": "^2.3.4",
     "prettier": "^3.5.3",
     "sequelize": "^6.37.7",
-    "umzug": "^3.8.2"
+    "umzug": "^3.8.2",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.24.0",
+    "@types/bcrypt": "^5.0.2",
     "@types/bun": "^1.2.8",
     "globals": "^16.0.0",
     "typescript-eslint": "^8.29.0"

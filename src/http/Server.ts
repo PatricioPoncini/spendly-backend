@@ -1,5 +1,6 @@
 import { Hono } from "hono";
-import { getEnvOrFail } from "../utils";
+import userRoutes from "./routes/user.routes";
+import { getEnvOrFail } from "@utils/env";
 
 export class Server {
   private static instance: Server | null = null;
@@ -12,6 +13,7 @@ export class Server {
 
   private routes() {
     this.app.get("/ping", (c) => c.text("pong"));
+    this.app.route("/", userRoutes);
   }
 
   public static op(): Server {
