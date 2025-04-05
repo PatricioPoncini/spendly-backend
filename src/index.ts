@@ -1,5 +1,5 @@
 import { Database } from "./db";
-import {Server} from "./http";
+import { Server } from "./http";
 
 try {
   Server.op().start();
