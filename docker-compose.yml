@@ -9,5 +9,3 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: spendly
-    volumes:
-      - ./data:/var/lib/postgresql/data
