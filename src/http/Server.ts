@@ -2,6 +2,8 @@ import { Hono } from "hono";
 import userRoutes from "./routes/user.routes";
 import { getEnvOrFail } from "@utils/env";
 import { cors } from "hono/cors";
+import morgan from "morgan";
+import { logger } from "hono/logger";
 
 export class Server {
   private static instance: Server | null = null;
@@ -9,6 +11,7 @@ export class Server {
 
   private constructor() {
     this.app = new Hono();
+    this.logger();
     this.cors();
     this.routes();
   }
@@ -26,6 +29,10 @@ export class Server {
         credentials: true,
       }),
     );
+  }
+
+  private logger() {
+    this.app.use(logger());
   }
 
   public static op(): Server {

@@ -10,7 +10,9 @@ export class Database {
   private migrator: Umzug<QueryInterface>;
 
   private constructor() {
-    this.sequelize = new Sequelize(getEnvOrFail("POSTGRES_URL"));
+    this.sequelize = new Sequelize(getEnvOrFail("POSTGRES_URL"), {
+      logging: false,
+    });
     this.migrator = new Umzug({
       migrations: {
         glob: "src/db/migrations/*.up.sql",
