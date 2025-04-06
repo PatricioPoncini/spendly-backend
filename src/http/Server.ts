@@ -2,7 +2,6 @@ import { Hono } from "hono";
 import userRoutes from "./routes/user.routes";
 import { getEnvOrFail } from "@utils/env";
 import { cors } from "hono/cors";
-import morgan from "morgan";
 import { logger } from "hono/logger";
 
 export class Server {
