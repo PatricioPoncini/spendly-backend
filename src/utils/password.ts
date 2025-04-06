@@ -1,7 +1,7 @@
-import bcrypt from "bcrypt";
+export const hashPassword = async (password: string) => {
+  return await Bun.password.hash(password);
+};
 
-const saltRounds = 10;
-
-export const hashPassword = (password: string) => {
-  return bcrypt.hashSync(password, saltRounds);
+export const verifyPassword = async (password: string, hash: string) => {
+  return await Bun.password.verify(password, hash);
 };

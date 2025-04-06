@@ -24,6 +24,7 @@ Create a `.env` file using the `.env.example` provided:
 POSTGRES_URL=
 PORT=
 FRONTEND_ORIGIN=
+JWT_SECRET=
 ```
 
 ## `🐳 Start the services`

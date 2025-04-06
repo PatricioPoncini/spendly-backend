@@ -19,11 +19,13 @@ export class Server {
   }
 
   private cors() {
-    this.app.use(cors({
-      origin: getEnvOrFail("FRONTEND_ORIGIN"),
-      allowMethods: ["POST", "GET", "PUT", "DELETE", "OPTIONS"],
-      credentials: true,
-    }));
+    this.app.use(
+      cors({
+        origin: getEnvOrFail("FRONTEND_ORIGIN"),
+        allowMethods: ["POST", "GET", "PUT", "DELETE", "OPTIONS"],
+        credentials: true,
+      }),
+    );
   }
 
   public static op(): Server {
