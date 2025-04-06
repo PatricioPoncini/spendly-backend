@@ -46,12 +46,12 @@ r.post("/login", schemaValidator(loginUserSchema), async (c) => {
 
   const payload = {
     sub: user.id,
-    exp: Math.floor(Date.now() / 1000) + 60 * 5, // Token expires in 5 minutes
+    exp: Math.floor(Date.now() / 1000) + 60 * 30, // Token expires in 30 minutes
   } satisfies JWTPayload;
 
   const token = await signJWT(payload);
 
-  return c.json({ message: token }, 200);
+  return c.json({ token: token }, 200);
 });
 
 export default r;
