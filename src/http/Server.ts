@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import userRoutes from "./routes/user.routes";
 import { getEnvOrFail } from "@utils/env";
+import { cors } from "hono/cors";
 
 export class Server {
   private static instance: Server | null = null;
@@ -8,12 +9,21 @@ export class Server {
 
   private constructor() {
     this.app = new Hono();
+    this.cors();
     this.routes();
   }
 
   private routes() {
     this.app.get("/ping", (c) => c.text("pong"));
     this.app.route("/", userRoutes);
+  }
+
+  private cors() {
+    this.app.use(cors({
+      origin: getEnvOrFail("FRONTEND_ORIGIN"),
+      allowMethods: ["POST", "GET", "PUT", "DELETE", "OPTIONS"],
+      credentials: true,
+    }));
   }
 
   public static op(): Server {

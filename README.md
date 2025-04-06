@@ -23,6 +23,7 @@ Create a `.env` file using the `.env.example` provided:
 ```sh
 POSTGRES_URL=
 PORT=
+FRONTEND_ORIGIN=
 ```
 
 ## `🐳 Start the services`
