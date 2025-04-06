@@ -1,8 +1,8 @@
 import { QueryInterface, Sequelize } from "sequelize";
-import { getEnvOrFail } from "../utils";
 import { SequelizeStorage, Umzug } from "umzug";
-import user from "./models/User";
+import user from "@db/models/User";
 import fs from "fs/promises";
+import { getEnvOrFail } from "@utils/env";
 
 export class Database {
   private static instance: Database | null = null;
