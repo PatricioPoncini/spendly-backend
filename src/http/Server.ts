@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import userRoutes from "./routes/user.routes";
+import categoryRoutes from "./routes/category.routes";
 import { getEnvOrFail } from "@utils/env";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
@@ -18,6 +19,7 @@ export class Server {
   private routes() {
     this.app.get("/ping", (c) => c.text("pong"));
     this.app.route("/", userRoutes);
+    this.app.route("/", categoryRoutes);
   }
 
   private cors() {
