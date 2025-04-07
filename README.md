@@ -40,6 +40,11 @@ bun run dev
 ```
 
 ## `🛠️ Tooling`
+### Run test cases
+```sh
+bun test
+```
+
 ### Lint and fix issues
 ```sh
 bun run lint:fix

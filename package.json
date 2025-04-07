@@ -1,7 +1,7 @@
 {
   "name": "spendly-backend",
   "scripts": {
-    "all": "bun run format && bun run lint:fix",
+    "all": "bun run format && bun run lint:fix && bun test",
     "dev": "bun run --hot src/index.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
