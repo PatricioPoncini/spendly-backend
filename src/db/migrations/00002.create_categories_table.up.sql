@@ -1,0 +1,8 @@
+CREATE TABLE categories (
+    "id" VARCHAR(255) PRIMARY KEY,
+    "title" VARCHAR(255) NOT NULL,
+    "logo" VARCHAR(255) NOT NULL,
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL,
+    "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL,
+    "version" INTEGER NOT NULL DEFAULT 0
+);
