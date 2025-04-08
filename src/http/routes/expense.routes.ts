@@ -3,7 +3,7 @@ import { Expense } from "@db/models/Expense";
 import { schemaValidator } from "@utils/validator";
 import { Hono } from "hono";
 import { z } from "zod";
-import { authMiddleware } from "../middlewares/jwt";
+import { authMiddleware } from "../middlewares";
 
 const createExpenseSchema = z.object({
   description: z.string().nonempty(),
