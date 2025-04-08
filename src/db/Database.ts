@@ -2,6 +2,7 @@ import { QueryInterface, Sequelize } from "sequelize";
 import { SequelizeStorage, Umzug } from "umzug";
 import user from "@db/models/User";
 import category from "@db/models/Category";
+import expense from "@db/models/Expense";
 import fs from "fs/promises";
 import { getEnvOrFail } from "@utils/env";
 
@@ -55,7 +56,7 @@ export class Database {
   }
 
   private initializeModels(sequelize: Sequelize) {
-    const models = [user, category];
+    const models = [user, category, expense];
     for (const model of models) {
       model.init(sequelize);
     }
