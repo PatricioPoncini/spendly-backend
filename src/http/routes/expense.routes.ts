@@ -39,9 +39,6 @@ r.get("/", authMiddleware, async (c) => {
     where: { userId: user.userId },
     include: "category",
   });
-  if (expenses.length === 0) {
-    return c.json({ message: "Expenses not found" }, 404);
-  }
 
   return c.json(expenses, 200);
 });
