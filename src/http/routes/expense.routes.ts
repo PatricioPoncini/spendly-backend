@@ -1,14 +1,19 @@
 import { Category } from "@db/models";
 import { Expense } from "@db/models/Expense";
-import { schemaValidator } from "@utils/validator";
+import { paramIdValidator, schemaValidator } from "@utils/validator";
 import { Hono } from "hono";
 import { z } from "zod";
 import { authMiddleware } from "../middlewares";
+import { literal, Op } from "sequelize";
 
 const createExpenseSchema = z.object({
   description: z.string().nonempty(),
   amount: z.number().nonnegative(),
   categoryId: z.string().nonempty().uuid(),
+});
+
+const getExpensesByMonthSchema = z.object({
+  month: z.coerce.number().nonnegative().min(1).max(12),
 });
 
 const r = new Hono().basePath("/expense");
@@ -42,5 +47,30 @@ r.get("/", authMiddleware, async (c) => {
 
   return c.json(expenses, 200);
 });
+
+r.get(
+  "/byMonth/:month",
+  authMiddleware,
+  paramIdValidator(getExpensesByMonthSchema),
+  async (c) => {
+    const user = c.get("user");
+    const { month } = c.req.valid("param");
+
+    const expenses = await Expense.findAll({
+      where: {
+        userId: user.userId,
+        [Op.and]: [
+          literal(`EXTRACT(MONTH FROM "Expense"."createdAt") = ${month}`),
+          literal(
+            `EXTRACT(YEAR FROM "Expense"."createdAt") = ${new Date().getFullYear()}`,
+          ),
+        ],
+      },
+      include: "category",
+    });
+
+    return c.json(expenses, 200);
+  },
+);
 
 export default r;
