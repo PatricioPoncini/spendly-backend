@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { z } from "zod";
 import { User } from "@db/models";
 import { schemaValidator } from "@utils/validator";
-import { verifyPassword, hashPassword } from "@utils/password";
+import { hashPassword, verifyPassword } from "@utils/password";
 import type { JWTPayload } from "hono/utils/jwt/types";
 import { signJWT } from "@utils/jwt";
 
@@ -23,8 +23,7 @@ const r = new Hono().basePath("/users");
 r.post("/register", schemaValidator(createUserSchema), async (c) => {
   const data = c.req.valid("json");
 
-  const passwordHashed = await hashPassword(data.password);
-  data.password = passwordHashed;
+  data.password = await hashPassword(data.password);
 
   await User.create(data);
 
