@@ -10,6 +10,7 @@ const createExpenseSchema = z.object({
   description: z.string().nonempty(),
   amount: z.number().nonnegative(),
   categoryId: z.string().nonempty().uuid(),
+  spentAt: z.string().datetime(),
 });
 
 const getExpensesByMonthSchema = z.object({
@@ -32,6 +33,7 @@ r.post("/", authMiddleware, schemaValidator(createExpenseSchema), async (c) => {
     categoryId: category.id,
     description: data.description,
     userId: user.userId,
+    spentAt: new Date(data.spentAt),
   });
 
   return c.json({ message: "Expense successfully saved" }, 200);
