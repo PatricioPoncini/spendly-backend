@@ -19,6 +19,7 @@ export class Expense extends Model<
   declare description: string;
   declare userId: string;
   declare categoryId: string;
+  declare spentAt: Date;
 }
 
 export type ExpenseAttributes = CreationAttributes<Expense>;
@@ -45,6 +46,10 @@ const init = (sequelize: Sequelize) => {
       },
       categoryId: {
         type: DataTypes.STRING,
+        allowNull: false,
+      },
+      spentAt: {
+        type: DataTypes.DATE,
         allowNull: false,
       },
     },
