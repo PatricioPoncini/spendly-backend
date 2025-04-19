@@ -62,9 +62,9 @@ r.get(
       where: {
         userId: user.userId,
         [Op.and]: [
-          literal(`EXTRACT(MONTH FROM "Expense"."createdAt") = ${month}`),
+          literal(`EXTRACT(MONTH FROM "Expense"."spentAt") = ${month}`),
           literal(
-            `EXTRACT(YEAR FROM "Expense"."createdAt") = ${new Date().getFullYear()}`,
+            `EXTRACT(YEAR FROM "Expense"."spentAt") = ${new Date().getFullYear()}`,
           ),
         ],
       },
