@@ -52,24 +52,18 @@ jobs:
       - name: Deploy
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} << EOF
-            # Cargar el entorno del usuario
             source ~/.bashrc
             source ~/.profile
           
-            # Si usas NVM, asegúrate de que esté cargado
             export NVM_DIR="\$HOME/.nvm"
             [ -s "\$NVM_DIR/nvm.sh" ] && \. "\$NVM_DIR/nvm.sh"
           
-            # Navegar al directorio del proyecto
             cd spendly-backend/
           
-            # Obtener los cambios más recientes
             git pull origin master
           
-            # Usar la instalación existente de Bun
             bun install
             bun run build
           
-            # Reiniciar o iniciar la aplicación con PM2
-            pm2 restart app || pm2 start dist/main.js --name app
+            pm2 restart spendly_backend
           EOF
