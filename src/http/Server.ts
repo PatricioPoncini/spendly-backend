@@ -18,7 +18,7 @@ export class Server {
   }
 
   private routes() {
-    this.app.get("/ping", (c) => c.text("pong"));
+    this.app.get("/ping", (c) => c.json({message: "pong"}));
     this.app.route("/", userRoutes);
     this.app.route("/", categoryRoutes);
     this.app.route("/", expenseRoutes);
