@@ -54,8 +54,14 @@ jobs:
           ssh ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} << EOF
             source ~/.bashrc
             cd spendly-backend/
-            npm install pm2 -g
-            curl -fsSL https://bun.sh/install | bash
+            if ! command -v pm2 &> /dev/null; then
+              npm install pm2 -g
+            fi
+            if ! command -v bun &> /dev/null; then
+              curl -fsSL https://bun.sh/install | bash
+              export PATH="\$HOME/.bun/bin:\$PATH"
+            fi
+            export PATH="\$HOME/.bun/bin:\$PATH"
             git pull origin master
             bun install
             bun run build
