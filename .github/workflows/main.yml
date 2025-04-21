@@ -1,17 +1,20 @@
-name: "All In One Action"
+name: CI/CD
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - master
   pull_request:
-    branches: [ "master" ]
+    branches:
+      - master
 
 jobs:
-  all-in-one-action:
+  check-code:
+    name: Lint, Format & Test
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Install Bun
@@ -28,3 +31,30 @@ jobs:
 
       - name: Run tests
         run: bun test
+
+  deploy:
+    name: Deploy to DigitalOcean
+    needs: check-code
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH access
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.DROPLET_IP }} >> ~/.ssh/known_hosts
+
+      - name: Deploy
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} << EOF
+            cd /spendly-backend
+            git pull origin master
+            bun install
+            bun run build
+            pm2 restart app
+          EOF
