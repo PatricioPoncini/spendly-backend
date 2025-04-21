@@ -52,7 +52,8 @@ jobs:
       - name: Deploy
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} << EOF
-            cd /spendly-backend
+            source ~/.bashrc
+            cd spendly-backend/
             git pull origin master
             bun install
             bun run build
