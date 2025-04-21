@@ -52,42 +52,24 @@ jobs:
       - name: Deploy
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} << EOF
-            # Mostrar información de diagnóstico
-            echo "Usuario actual: \$(whoami)"
-            echo "Directorio actual: \$(pwd)"
-            echo "PATH: \$PATH"
+            # Cargar el entorno del usuario
+            source ~/.bashrc
+            source ~/.profile
           
-            # Instalar dependencias del sistema necesarias
-            sudo apt-get update
-            sudo apt-get install -y unzip curl
+            # Si usas NVM, asegúrate de que esté cargado
+            export NVM_DIR="\$HOME/.nvm"
+            [ -s "\$NVM_DIR/nvm.sh" ] && \. "\$NVM_DIR/nvm.sh"
           
             # Navegar al directorio del proyecto
             cd spendly-backend/
+          
+            # Obtener los cambios más recientes
             git pull origin master
           
-            # Instalar Node.js directamente si no está disponible
-            if ! command -v node &> /dev/null; then
-              curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-              sudo apt-get install -y nodejs
-            fi
+            # Usar la instalación existente de Bun
+            bun install
+            bun run build
           
-            # Instalar PM2 globalmente
-            sudo npm install -g pm2
-          
-            # Instalar Bun con método alternativo
-            curl -fsSL https://bun.sh/install | bash
-            source ~/.bashrc
-            export BUN_INSTALL="\$HOME/.bun"
-            export PATH="\$BUN_INSTALL/bin:\$PATH"
-          
-            # Verificar instalaciones
-            echo "Node version: \$(node -v || echo 'Not installed')"
-            echo "NPM version: \$(npm -v || echo 'Not installed')"
-            echo "Bun version: \$(~/.bun/bin/bun -v || echo 'Not installed')"
-            echo "PM2 version: \$(pm2 -v || echo 'Not installed')"
-          
-            # Ejecutar los comandos de la aplicación usando rutas completas por seguridad
-            ~/.bun/bin/bun install
-            ~/.bun/bin/bun run build
+            # Reiniciar o iniciar la aplicación con PM2
             pm2 restart app || pm2 start dist/main.js --name app
           EOF
