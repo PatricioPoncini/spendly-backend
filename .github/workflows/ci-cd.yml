@@ -33,7 +33,7 @@ jobs:
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} << EOF
             set -e
-            cd /spendly-backend
+            cd spendly-backend/
             git pull origin master
             bun install
             bun run build
