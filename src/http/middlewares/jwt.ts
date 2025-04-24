@@ -1,4 +1,4 @@
-import { verifyJWT } from "@utils/jwt";
+import { verifyAccessJWT } from "@utils/jwt";
 import { createFactory } from "hono/factory";
 import type { AuthEnv, AuthenticatedUser } from "types";
 
@@ -15,7 +15,7 @@ export const authMiddleware = createFactory<AuthEnv>().createMiddleware(
     }
 
     try {
-      const decoded = await verifyJWT(token);
+      const decoded = await verifyAccessJWT(token);
       const user = {
         userId: decoded.sub,
       } as AuthenticatedUser;
