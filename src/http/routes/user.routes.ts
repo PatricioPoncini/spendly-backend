@@ -4,7 +4,13 @@ import { User } from "@db/models";
 import { schemaValidator } from "@utils/validator";
 import { hashPassword, verifyPassword } from "@utils/password";
 import type { JWTPayload } from "hono/utils/jwt/types";
-import { signJWT } from "@utils/jwt";
+import {
+  getSevenDaysExp,
+  getThirtyMinutesExp,
+  signAccessJWT,
+  signRefreshJWT,
+  verifyRefreshJWT,
+} from "@utils/jwt";
 
 const createUserSchema = z.object({
   firstName: z.string().nonempty(),
@@ -19,6 +25,25 @@ const loginUserSchema = z.object({
 });
 
 const r = new Hono().basePath("/users");
+
+r.post("/refresh", async (c) => {
+  const refreshToken = c.req.raw.headers
+    .get("cookie")
+    ?.match(/refreshToken=([^;]+)/)?.[1];
+
+  if (!refreshToken) {
+    return c.json({ message: "Unauthorized" }, 401);
+  }
+
+  const payload = await verifyRefreshJWT(refreshToken);
+
+  const newAccessToken = await signAccessJWT({
+    sub: payload.sub, // userId
+    exp: getThirtyMinutesExp(),
+  });
+
+  return c.json({ accessToken: newAccessToken });
+});
 
 r.post("/register", schemaValidator(createUserSchema), async (c) => {
   const data = c.req.valid("json");
@@ -43,14 +68,22 @@ r.post("/login", schemaValidator(loginUserSchema), async (c) => {
     return c.json({ message: "Invalid credentials" }, 400);
   }
 
-  const payload = {
+  const accessToken = await signAccessJWT({
     sub: user.id,
-    exp: Math.floor(Date.now() / 1000) + 60 * 30, // Token expires in 30 minutes
-  } satisfies JWTPayload;
+    exp: getThirtyMinutesExp(),
+  });
 
-  const token = await signJWT(payload);
+  const refreshToken = await signRefreshJWT({
+    sub: user.id,
+    exp: getSevenDaysExp(),
+  } satisfies JWTPayload);
 
-  return c.json({ token: token }, 200);
+  c.header(
+    "Set-Cookie",
+    `refreshToken=${refreshToken}; HttpOnly; Path=/; SameSite=Strict; Secure; Max-Age=${getSevenDaysExp()}`,
+  );
+
+  return c.json({ accessToken: accessToken }, 200);
 });
 
 export default r;
