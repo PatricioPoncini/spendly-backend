@@ -48,6 +48,11 @@ r.post("/refresh", async (c) => {
 r.post("/register", schemaValidator(createUserSchema), async (c) => {
   const data = c.req.valid("json");
 
+  const existUser = await User.findOne({ where: { userName: data.userName } });
+  if (existUser) {
+    return c.json({ message: "Username already in use" }, 400);
+  }
+
   data.password = await hashPassword(data.password);
 
   await User.create(data);
