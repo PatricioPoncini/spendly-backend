@@ -60,3 +60,9 @@ To connect to the database container:
 ```sh
 docker exec -it postgres_db psql -U user -d spendly
 ```
+
+### `🌱 Seed the database`
+To populate the database with fake data, run the following command:
+```sh
+bun run seed-db
+```

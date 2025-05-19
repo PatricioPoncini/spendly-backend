@@ -6,7 +6,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
-    "build": "bun build --compile --target=bun-linux-x64 src/index.ts --outfile spendly_backend"
+    "build": "bun build --compile --target=bun-linux-x64 src/index.ts --outfile spendly_backend",
+    "seed-db": "sh scripts/seed/seed.sh"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.4.3",
